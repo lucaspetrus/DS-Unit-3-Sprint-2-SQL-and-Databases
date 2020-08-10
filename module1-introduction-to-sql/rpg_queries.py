@@ -87,10 +87,16 @@ print(f"Total Items for Each Character: {item_per_character_results}")
 """
 How many Weapons does each character have? (Return first 20 rows)
 """
-weapon_per_character = """SELECT character_id, COUNT(DISTINCT item_ptr_id) 
-FROM(SELECT cc.character_id, cc.name AS character_name, ai.item_id, ai.name AS item_name
-FROM charactercreator_character AS cc, armory_weapon AS ai,charactercreator_character_inventory AS cci
-WHERE cc.character_id = cci.character_id AND ai.item_ptr_id = cci.item_id)
+weapon_per_character = """SELECT name, COUNT(DISTINCT item_ptr_id) FROM
+(SELECT cc.character_id, cc.name, aw.item_ptr_id, aw.power
+FROM charactercreator_character AS cc,
+armory_weapon AS aw,
+charactercreator_character_inventory AS cci
+WHERE cc.character_id = cci.character_id
+AND aw.item_ptr_id = cci.item_id)
 GROUP BY 1 ORDER BY 2 DESC
 LIMIT 20;"""
+curs.execute(weapon_per_character)
+weapon_per_character_result = curs.fetchall()
+print(f"Total Weapons for Characters: {weapon_per_character_result}")
 
