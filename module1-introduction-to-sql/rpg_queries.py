@@ -12,7 +12,7 @@ On average, how many Weapons does each character have?"""
 import sqlite3
 
 
-conn = sqlite3.connect('rpg_db.sqlite3')
+conn = sqlite3.connect('../module2-sql-for-analysis/rpg_db.sqlite3')
 curs = conn.cursor()
 
 
@@ -75,7 +75,7 @@ How many Items does each character have? (Return first 20 rows)
 """
 item_per_character = """SELECT character_id, COUNT(DISTINCT item_id) 
 FROM(SELECT cc.character_id, cc.name AS character_name, ai.item_id, ai.name AS item_name
-FROM charactercreator_character AS cc,armory_item AS ai,charactercreator_character_inventory AS cci
+FROM charactercreator_character AS cc,armory_item AS ai, charactercreator_character_inventory AS cci
 WHERE cc.character_id = cci.character_id AND ai.item_id = cci.item_id)
 GROUP BY 1 ORDER BY 2 DESC
 LIMIT 20;"""

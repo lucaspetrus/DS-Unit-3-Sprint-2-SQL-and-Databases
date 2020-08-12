@@ -1,18 +1,39 @@
-import sqlite3
-
+import pandas as pd
 import psycopg2
 
-# help(psycopg2.connect)
-dbname = "nsvkevhb"
-user = "nsvkevhb"
-password = "mTsryvpzvKAG_GuZ6DEGn1K0ZcT4PvbZ"
-host = "otto.db.elephantsql.com"
+df = pd.read_csv('titanic.csv')
+df = df.rename({'Siblings/Spouses Aboard': 'SibSpouse',
+                'Parents/Children Aboard': 'ParChild'}, axis=1)
 
+#print(df.head())
 
-conn = sqlite3.connect('/Users/lucaspetrus/PycharmProjects/DS-Unit-3-Sprint-2-SQL-and-Databases/module2-sql-for-analysis/titanic.csv')
-curs = conn.cursor()
+cloud = psycopg2.connect(
+    dbname="nsvkevhb",
+    user="nsvkevhb",
+    password="mTsryvpzvKAG_GuZ6DEGn1K0ZcT4PvbZ",
+    host="otto.db.elephantsql.com",
+)
 
-pg_conn = psycopg2.connect(dbname=dbname, user=user,
-                           password=password, host=host)
-dir(conn)
+cursor = cloud.cursor()
 
+cursor.execute("""
+DROP TABLE IF EXISTS Titanic;
+CREATE TABLE Titanic (
+    Survived        INT8,
+    Pclass          INT8,
+    SibSpouse       INT8,
+    ParChild        INT8,
+    FARE            FLOAT8);
+""")
+cloud.commit()
+
+cursor.execute("""
+SELECT
+FROM Titanic
+LIMIT 1;
+""")
+
+print(cursor.fetchone())
+
+# Dont understand why I am not receiving any values from the above statement
+# Seems like it executed fine, but im starting to think my DF has no values at all
