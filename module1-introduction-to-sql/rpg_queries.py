@@ -1,4 +1,4 @@
-#Questions for Today
+# Questions for Today
 
 """How many total Characters are there?
 How many of each specific subclass?
@@ -12,14 +12,14 @@ On average, how many Weapons does each character have?"""
 import sqlite3
 
 
-conn = sqlite3.connect('../module2-sql-for-analysis/rpg_db.sqlite3')
+conn = sqlite3.connect('../module3-nosql-and-document-oriented-databases/rpg_db.sqlite3')
 curs = conn.cursor()
 
 
 """How many total Characters are there"""
 character_query = 'SELECT COUNT(*) FROM charactercreator_character'
 curs.execute(character_query)
-results = curs.fetchone()
+results = curs.fetchone() # fetchall() is somewhat interchangeable
 print(f"Total Characters: {results[0]}")
 
 
@@ -74,10 +74,13 @@ print(f"Not Weapons: {items_results[0] - weapon_results[0]}")
 How many Items does each character have? (Return first 20 rows)
 """
 item_per_character = """SELECT character_id, COUNT(DISTINCT item_id) 
+#Distinct means Unqiue or Value_counts
+
+#subquery below
 FROM(SELECT cc.character_id, cc.name AS character_name, ai.item_id, ai.name AS item_name
 FROM charactercreator_character AS cc,armory_item AS ai, charactercreator_character_inventory AS cci
-WHERE cc.character_id = cci.character_id AND ai.item_id = cci.item_id)
-GROUP BY 1 ORDER BY 2 DESC
+WHERE cc.character_id = cci.character_id AND ai.item_id = cci.item_id) ###This WHERE function is the implicit join
+GROUP BY 1 ORDER BY 2 DESC #Group by column 1, and Column 2 becomes descending column with items
 LIMIT 20;"""
 curs.execute(item_per_character)
 item_per_character_results = curs.fetchall()
