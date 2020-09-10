@@ -90,3 +90,15 @@ GROUP BY Survived
 curs.execute(average_age_survivor_query)
 items_results = curs.fetchone()
 print(f"Average Age of Survivors: {items_results[0]}")
+
+
+# Average fare by passenger class
+
+average_fare_query = """
+                    SELECT Pclass, AVG(fare)
+                    FROM Titanic
+                    GROUP BY Pclass
+                    """
+curs.execute(average_fare_query)
+items_results = curs.fetchall()
+print(f"Average Fare for Class: {items_results}")
