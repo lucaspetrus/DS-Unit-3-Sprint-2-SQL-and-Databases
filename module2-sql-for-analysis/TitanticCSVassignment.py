@@ -1,7 +1,7 @@
 import pandas as pd
 import psycopg2
 
-df = pd.read_csv('titanic.csv')
+df = pd.read_csv('../module4-acid-and-database-scalability-tradeoffs/titanic.csv')
 df = df.rename({'Siblings/Spouses Aboard': 'SibSpouse',
                 'Parents/Children Aboard': 'ParChild'}, axis=1)
 
@@ -33,7 +33,7 @@ CREATE TABLE Titanic (
 """)
 cloud.commit()
 
-with open('titanic.csv', 'r') as f:
+with open('../module4-acid-and-database-scalability-tradeoffs/titanic.csv', 'r') as f:
     next(f)
     cursor.copy_from(f, 'Titanic', sep=',')
 
